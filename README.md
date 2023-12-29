@@ -4,7 +4,11 @@ Download YouTube transcripts with python.
 
 # Usage
 
-`python transcript.py <video-id>`
+```bash
+python -m venv venv
+source venv/bin/activate
+python transcript.py <video-id>
+```
 
 # Library
 
