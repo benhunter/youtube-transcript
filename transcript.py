@@ -1,14 +1,10 @@
 import sys
 from youtube_transcript_api import YouTubeTranscriptApi
-from youtube_transcript_api.formatters import TextFormatter
+from youtube_transcript_api.formatters import TextFormatter, JSONFormatter
 
-video_id = sys.argv[1]
 
-# retrieve the available transcripts
-
-list_transcripts = False
-# iterate over all available transcripts
-if list_transcripts:
+def list_transcripts(video_id):
+    # retrieve the available transcripts
     transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
     for transcript in transcript_list:
 
@@ -31,27 +27,40 @@ if list_transcripts:
         # translating the transcript will return another transcript object
         # print(transcript.translate('en').fetch())
 
-# you can also directly filter for the language you are looking for, using the transcript list
-# transcript = transcript_list.find_transcript(['de', 'en'])
-# transcript = transcript_list.find_transcript(['en'])
+    # you can also directly filter for the language you are looking for, using the transcript list
+    # transcript = transcript_list.find_transcript(['de', 'en'])
+    # transcript = transcript_list.find_transcript(['en'])
 
-# or just filter for manually created transcripts
-# transcript = transcript_list.find_manually_created_transcript(['de', 'en'])
+    # or just filter for manually created transcripts
+    # transcript = transcript_list.find_manually_created_transcript(['de', 'en'])
 
-# or automatically generated ones
-# transcript = transcript_list.find_generated_transcript(['de', 'en'])
-
-
-# from youtube_transcript_api.formatters import JSONFormatter
-# formatter = JSONFormatter()
-# json_formatted = formatter.format_transcript(transcript)
-# with open('your_filename.json', 'w', encoding='utf-8') as json_file:
-    # json_file.write(json_formatted)
+    # or automatically generated ones
+    # transcript = transcript_list.find_generated_transcript(['de', 'en'])
 
 
-transcript = YouTubeTranscriptApi.get_transcript(video_id)
-formatter = TextFormatter()
-text_formatted = formatter.format_transcript(transcript)
-with open(f'youtube_transcript_{video_id}.txt', 'w', encoding='utf-8') as text_file:
-    text_file.write(text_formatted)
-    print(f'Wrote transcript to youtube_transcript_{video_id}.txt')
+def write_json_transcript(video_id):
+    transcript = YouTubeTranscriptApi.get_transcript(video_id)
+    formatter = JSONFormatter()
+    json_formatted = formatter.format_transcript(transcript)
+
+    with open(f'youtube_transcript_{video_id}.json', 'w', encoding='utf-8') as json_file:
+        json_file.write(json_formatted)
+
+
+def write_text_transcript(video_id):
+    transcript = YouTubeTranscriptApi.get_transcript(video_id)
+    formatter = TextFormatter()
+    text_formatted = formatter.format_transcript(transcript)
+
+    with open(f'youtube_transcript_{video_id}.txt', 'w', encoding='utf-8') as text_file:
+        text_file.write(text_formatted)
+        print(f'Wrote transcript to youtube_transcript_{video_id}.txt')
+
+
+def main():
+    video_id = sys.argv[1]
+    write_text_transcript(video_id)
+
+
+if __name__ == '__main__':
+    main()
